@@ -1,0 +1,59 @@
+GraphQL allows the client to request only the exact amount of data they need. 
+- This allows less data to be transferred over the network.
+- Only relevant data is transferred.
+- It is type safe, only the correctly requested data is transferred.
+
+For REST API's:
+- In order to send a PUT request, you would have routes like user/userId 
+- In order to send a GET request, you would have routes like user/userInfo
+- This would lead to a lot of routes to maintain
+
+For GraphQL:
+- We would have a single endpoint, typically /graphql
+- The request type would be a POST request, and depending on the query, we get 
+  relevant info back.
+- i.e, the query changes, but not the URL, therefore easier to maintain/understand.
+
+SDL = Schema definition language
+
+Scalar Types: String, Int, Boolean, Float, ID.
+Object Types: Define an object that you want to fetch from your data source, and what fields 
+  it has:
+  eg: type User {
+    id: ID!,
+    name: String!,
+    email: String!,
+    posts: [Post]
+  }
+(The exclamation means it has to be a Non-Null return)
+It is composed of other scalar and object types.
+
+
+Example:
+type Person {
+  name: String!
+}
+
+type Query {
+  me: Person!
+}
+
+The "me" field on Query has to return a "Person".
+The "name" field on Person has to return a "String".
+
+const server = new ApolloServer({
+  schema: addMocksToSchema({
+    schema: makeExecutableSchema({ typeDefs }),
+  }),
+  plugins,
+})
+
+The above lines of code in route.ts adds mock data to your schema.
+This allows us to immediately start using our graphql api, without having to configure a 
+  db.
+
+__typename: Tells you what object you are resolving to.
+
+... on Person {  // triple dot is called inline fragment
+      backgroundStory
+  }
