@@ -57,3 +57,31 @@ __typename: Tells you what object you are resolving to.
 ... on Person {  // triple dot is called inline fragment
       backgroundStory
   }
+
+Type Modifiers:
+! => The field cannot be NULL.
+[] => The field is a list type.
+
+One flaw with GraphQL is because of its cyclical nature, you can have an object which has a 1-1 relationship with
+  another object. Due to this nature, attackers could DDoS your GraphQL API with an infinitely nested request.
+
+Directives:
+You can place a directive on a field, a type or the actual value.
+
+Directives alter the way the server interprets the schema.
+  We can use them for documentation (example: @deprecated()), authentication (example: @auth())
+  and so on.
+
+You can tie into many stages of a hook in graphQL, like the start phase, after fetching data, etc.
+
+Enum types:
+  Example: 
+    enum Role {
+      ADMIN
+      USER
+      ROLE
+    }
+  This makes it such that a field would have a string value, but it has to be one of the values 
+  in the enum.
+
+Operations in GraphQL:
