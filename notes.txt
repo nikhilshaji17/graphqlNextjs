@@ -85,3 +85,36 @@ Enum types:
   in the enum.
 
 Operations in GraphQL:
+Queries:
+  These are like GET requests.
+  You need a minimum of 1 query. Else, the program does not work.
+
+You can pass an argument to a query.
+query Query($input: SearchInput!) {
+
+}
+$input = argument name
+SearchInput = argument type
+
+Mutation:
+  These are like POST, PUT, DELETE
+  You are trying to modify something from the server.
+
+The syntax of a mutation and query are pretty much the same, but their behaviour on 
+  the backend is different. Mutation for edits, query for fetching
+
+Subscriptions:
+Used for real-time events.
+
+END OF OPERATIONS
+
+Resolvers:
+Resolvers provide the instructions for turning a GraphQL operation 
+  (query, mutation, or subscription) into data. 
+They define how to fetch or modify the data exactly as the client requests.
+
+Queries describes the contract, and resolvers define how to get the values of that contract.
+
+So when we run a query, the resolver attached to that query is what describes the structure of 
+  the data we get back.
+
