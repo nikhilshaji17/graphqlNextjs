@@ -81,7 +81,7 @@ Enum types:
       USER
       ROLE
     }
-  This makes it such that a field would have a string value, but it has to be one of the values 
+  This makes it such that a field would have a string value, but it has to be one of the values
   in the enum.
 
 Operations in GraphQL:
@@ -115,6 +115,120 @@ They define how to fetch or modify the data exactly as the client requests.
 
 Queries describes the contract, and resolvers define how to get the values of that contract.
 
-So when we run a query, the resolver attached to that query is what describes the structure of 
+So when we run a query, the resolver attached to that query is what describes the structure of
   the data we get back.
+
+Structure of a resolver:
+  const resolvers = {
+  Query: {
+    user: (parent, args, context, info) => {
+      return context.dataSources.userAPI.getUserById(args.id);
+    }
+  }
+}
+So on the Query type, when someone asks for the user field, the function above is the one that runs.
+
+The 4 arguments of the resolver function:
+  1. parent => Most likely null, if we are running a top level query.
+  2. args => similar to props in react, takes all the arguments of the query.
+  3. context => initialized at the beginning of the server, it takes the state of our system (or something like that)
+  4. info => information of the actual query itself. Mainly used for analytics and metadata details.
+
+  5. return value => You can choose to return anything you want, a String, and array of promises and so on.
+
+If your schema is this:
+const schema = `#graphql
+
+  type Query {
+    me: String!
+    id: ID!
+  }
+`
+
+export default schema
+
+Then your resolver will be something like:
+const resolvers = {
+  Query: {
+    me: () => {
+      return "hello there";
+    },
+
+    id: () => {
+      return (123)
+    }
+  }
+}
+
+export default resolvers
+
+
+Example 2:
+const schema = `#graphql
+
+  type Person {
+    name: String
+    id: ID
+  }
+
+  type Query {
+    me: String!
+    people: [Person!]!
+  }
+`
+
+export default schema
+
+const resolvers = {
+
+  Person: {
+    name: (person) => {
+      return person.name.toUpperCase()
+    }
+  },
+  Query: {
+    me: () => {
+      return "hello there";
+    },
+    people: () => {
+      return [{name: "Sam", id: 123}]
+    }
+  }
+}
+
+The people function will run, and get an array back, then the Person.name function runs,
+  modifying the name to be uppercase.
+
+Resolving Enums:
+Typically, enum values do not require special resolver functions; 
+  they are validated by the GraphQL server against the schema and returned directly.
+
+However, we can map enums to different values in case:
+  1. We want to output different values in the UI
+
+Example: 
+  enum COLORS {
+    BLUE
+    PURPLE
+    BROWN
+  }
+  All colors can be mapped to their HEX value in the resolver.
+
+Resolving Unions:
+We need to add a __resolveType to identify what union to return.
+
+SearchType: {
+    __resolveType: (obj) => {
+      if (obj.species) {
+        return 'Animal';
+      }
+      return 'Person';
+    },
+}
+
+Resolving Interfaces:
+Similar to resolving unions, we need to add a __resolveType here as well.
+
+NOTE: If you are going to make a resolver for an object type, it will always 
+  have a parent.
 
