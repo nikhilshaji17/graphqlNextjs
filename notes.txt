@@ -232,3 +232,8 @@ Similar to resolving unions, we need to add a __resolveType here as well.
 NOTE: If you are going to make a resolver for an object type, it will always 
   have a parent.
 
+Setting up a GraphQL server:
+To set up a GQL server, you need a schema + a resolver
+
+ORM = Object-relational mapping (The code you use to interact with your db.)
+
